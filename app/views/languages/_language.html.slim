@@ -1,0 +1,14 @@
+.language.col-lg-6.mb-4
+  .card
+    .card-body
+      .card-title
+        = language.name
+      .tags
+        - language.tags.each do |tag|
+          .tag.badge.badge-info.mr-1
+            = tag
+
+      .authors
+        - language.authors.each do |author|
+          .author.badge.badge-secondary.mr-1
+            = author

@@ -1,0 +1,17 @@
+.container
+  .row.mt-5.mb-5
+    .col-lg-12
+      .search-box
+        form#search-form.form-inline action=search_path method="get"
+          .form-group.mb-2.col-lg-6
+            input.form-control-plaintext type="placeholder" name="query" value=params[:query] placeholder="Search..."
+          button.btn.btn-primary.mb-2
+            | Search
+  .row
+    - if @languages.present?
+      - @languages.each do |language|
+        = render 'language', language: language
+    - else
+      .col-lg-12
+        h5
+          = no_languages_message
