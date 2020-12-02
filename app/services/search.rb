@@ -4,7 +4,7 @@
 # Search#perform does the following:
 # 1. If query is empty returns all languages
 # 2. Filters languages if one more of the following options provided: must_include, exact_matches, excludes.
-# 3. If includes is empty returns filtered languages
+# 3. If should_include is empty returns filtered languages
 # 4. Else calculates relevance points for language based on how many matches found.
 #   It looks in all 3 fields: name, tags, authors.
 #   Rejects languages with 0 points from search result.
@@ -41,8 +41,8 @@ class Search
       languages = excludes_filter(languages, query.excludes)
     end
 
-    if query.includes.any?
-      languages = order_languages_by_relevance(languages, query.includes)
+    if query.should_include.any?
+      languages = order_languages_by_relevance(languages, query.should_include)
     end
 
     languages
@@ -78,19 +78,19 @@ class Search
     end
   end
 
-  def order_languages_by_relevance(languages, includes)
+  def order_languages_by_relevance(languages, should_include)
     languages.map do |language|
-      [calculate_points_for_language(language, includes) * -1, language]
+      [calculate_points_for_language(language, should_include) * -1, language]
     end.sort_by(&:first).reject { |arr| arr.first == 0 }.map(&:last)
   end
 
-  def calculate_points_for_language(language, includes)
+  def calculate_points_for_language(language, should_include)
     points = 0
     name_multiplier = 3
     tag_multiplier = 2
     author_multiplier = 1
 
-    includes.each do |word|
+    should_include.each do |word|
       points += name_multiplier if matches_string?(language.name, word)
       points += tag_multiplier if matches_string_in_array?(language.tags, word)
       points += author_multiplier if matches_string_in_array?(language.authors, word)

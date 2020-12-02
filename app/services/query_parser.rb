@@ -82,7 +82,7 @@ class QueryParser
       end
     end
 
-    class Includes < Node
+    class ShouldInclude < Node
 
     end
 
@@ -225,7 +225,7 @@ class QueryParser
     query.exact_matches = nodes.select { |node| node.is_a?(Nodes::String) }.map(&:value)
     query.excludes = nodes.select { |node| node.is_a?(Nodes::Excludes) }.map(&:value)
     query.must_include = nodes.select { |node| node.is_a?(Nodes::MustInclude) }.map(&:value)
-    query.includes = nodes.select { |node| node.is_a?(Nodes::Text) }.map(&:value)
+    query.should_include = nodes.select { |node| node.is_a?(Nodes::Text) }.map(&:value)
 
     query
   end

@@ -5,16 +5,16 @@
 #   Probably they are the same? If so, we can remove one.
 #
 class Query
-  attr_accessor :exact_matches, :excludes, :includes, :must_include
+  attr_accessor :exact_matches, :excludes, :should_include, :must_include
 
-  def initialize(exact_matches: [], excludes: [], includes: [], must_include: [])
+  def initialize(exact_matches: [], excludes: [], should_include: [], must_include: [])
     @exact_matches = exact_matches
     @excludes = excludes
-    @includes = includes
+    @should_include = should_include
     @must_include = must_include
   end
 
   def empty?
-    exact_matches.empty? && excludes.empty? && includes.empty? && must_include.empty?
+    exact_matches.empty? && excludes.empty? && should_include.empty? && must_include.empty?
   end
 end

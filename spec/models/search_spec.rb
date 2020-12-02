@@ -48,8 +48,8 @@ describe Search do
       )
     end
 
-    it 'query with single includes' do
-      query = Query.new(includes: ['actionscript'])
+    it 'query with single should_include' do
+      query = Query.new(should_include: ['actionscript'])
       language_names = Search.new(query, @languages).perform.map(&:name)
       expect(language_names).to eq(['ActionScript'])
     end
@@ -73,7 +73,7 @@ describe Search do
     end
 
     it 'complex query' do
-      query = Query.new(must_include: ['curly-bracket'], excludes: ['gary'], includes: ['scripting'])
+      query = Query.new(must_include: ['curly-bracket'], excludes: ['gary'], should_include: ['scripting'])
       language_names = Search.new(query, @languages).perform.map(&:name)
       expect(language_names).to eq(['AWK'])
     end
