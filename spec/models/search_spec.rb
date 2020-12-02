@@ -60,12 +60,6 @@ describe Search do
       expect(language_names).to eq(['bash', 'BASIC'])
     end
 
-    it 'query with exact matches' do
-      query = Query.new(exact_matches: ['imperative', 'procedural'])
-      language_names = Search.new(query, @languages).perform.map(&:name)
-      expect(language_names).to eq(['BASIC', 'C'])
-    end
-
     it 'query with must-includes' do
       query = Query.new(must_include: ['imperative', 'procedural'])
       language_names = Search.new(query, @languages).perform.map(&:name)

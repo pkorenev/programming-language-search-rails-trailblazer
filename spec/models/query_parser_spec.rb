@@ -17,7 +17,7 @@ describe QueryParser do
     it 'query with word and quoted strings' do
       query = QueryParser.new(' procedural iterative   "  object-oriented class-based  "').parse
       expect(query.should_include).to eq(['procedural', 'iterative'])
-      expect(query.exact_matches).to eq(['object-oriented class-based'])
+      expect(query.must_include).to eq(['object-oriented class-based'])
     end
 
     it 'query with word and excluded words' do
@@ -42,9 +42,8 @@ describe QueryParser do
       query = QueryParser.new(query_string).parse
 
       expect(query.should_include).to eq(['object', 'abc', 'reflective'])
-      expect(query.exact_matches).to eq(['interpreted procedural'])
       expect(query.must_exclude).to eq(['array', 'interactive mode'])
-      expect(query.must_include).to eq(['metaprogramming', 'Command line'])
+      expect(query.must_include).to eq(['interpreted procedural', 'metaprogramming', 'Command line'])
     end
   end
 end

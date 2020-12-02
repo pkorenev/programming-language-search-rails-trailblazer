@@ -3,14 +3,13 @@
 # Provides ability to search across languages.
 # Search#perform does the following:
 # 1. If query is empty returns all languages
-# 2. Filters languages if one more of the following options provided: must_include, exact_matches, must_exclude.
+# 2. Filters languages if one more of the following options provided: must_include, must_exclude.
 # 3. If should_include is empty returns filtered languages
 # 4. Else calculates relevance points for language based on how many matches found.
 #   It looks in all 3 fields: name, tags, authors.
 #   Rejects languages with 0 points from search result.
 
 # TODO: Think how logic should work.
-# TODO: Consider must_include and exact_matches options. Probably we don't need both of them.
 
 class Search
   attr_reader :query, :languages
@@ -31,10 +30,6 @@ class Search
 
     if query.must_include.any?
       languages = must_include_filter(languages, query.must_include)
-    end
-
-    if query.exact_matches.any?
-      languages = must_include_filter(languages, query.exact_matches)
     end
 
     if query.must_exclude.any?

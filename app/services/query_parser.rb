@@ -222,9 +222,12 @@ class QueryParser
   def build_query(tree)
     query = Query.new
     nodes = tree.children
-    query.exact_matches = nodes.select { |node| node.is_a?(Nodes::String) }.map(&:value)
     query.must_exclude = nodes.select { |node| node.is_a?(Nodes::MustExclude) }.map(&:value)
-    query.must_include = nodes.select { |node| node.is_a?(Nodes::MustInclude) }.map(&:value)
+
+    query.must_include = nodes.select do |node|
+      node.is_a?(Nodes::MustInclude) || node.is_a?(Nodes::String)
+    end.map(&:value)
+
     query.should_include = nodes.select { |node| node.is_a?(Nodes::Text) }.map(&:value)
 
     query
