@@ -14,13 +14,13 @@
 class QueryParser
   module SYMBOLS
     QUOTE = '"'
-    EXCLUDES_OPERATOR = '--'
+    MUST_EXCLUDE_OPERATOR = '--'
     MUST_INCLUDE_OPERATOR = '+'
   end
 
   module TOKENS
     QUOTE = :quote
-    EXCLUDES_OPERATOR = :excludes
+    MUST_EXCLUDE_OPERATOR = :must_exclude
     MUST_INCLUDE_OPERATOR = :must_include
     TEXT = :text
   end
@@ -72,7 +72,7 @@ class QueryParser
       end
     end
 
-    class Excludes < Node
+    class MustExclude < Node
       def value
         children.first.is_a?(Nodes::String) ? children.first.value : children.first
       end
@@ -117,7 +117,7 @@ class QueryParser
 
   # for now this is not used
   def registered_node_types
-    [Nodes::String, Nodes::Excludes, Nodes::MustInclude, Nodes::Text]
+    [Nodes::String, Nodes::MustExclude, Nodes::MustInclude, Nodes::Text]
   end
 
   def parse
@@ -140,8 +140,8 @@ class QueryParser
         { type: TOKENS::QUOTE },
         *to_token(string[quote_index + 1, string.length])
       ]
-    elsif string.start_with?(SYMBOLS::EXCLUDES_OPERATOR)
-      token = { type: TOKENS::EXCLUDES_OPERATOR, value: string[SYMBOLS::EXCLUDES_OPERATOR.length, string.length] }
+    elsif string.start_with?(SYMBOLS::MUST_EXCLUDE_OPERATOR)
+      token = { type: TOKENS::MUST_EXCLUDE_OPERATOR, value: string[SYMBOLS::MUST_EXCLUDE_OPERATOR.length, string.length] }
       token.delete(:value) if token[:value].empty?
       [token]
     elsif string.start_with?(SYMBOLS::MUST_INCLUDE_OPERATOR)
@@ -165,7 +165,7 @@ class QueryParser
   def build_subtree!(tokens, node)
     context = node
     quote_opened = false
-    excludes_opened = false
+    must_exclude_opened = false
     must_include_opened = false
 
     tokens.map do |token|
@@ -177,8 +177,8 @@ class QueryParser
           context = string_node
         else
           quote_opened = false
-          if excludes_opened
-            excludes_opened = false
+          if must_exclude_opened
+            must_exclude_opened = false
             context = context.parent.parent
           elsif must_include_opened
             must_include_opened = false
@@ -188,15 +188,15 @@ class QueryParser
           end
         end
 
-      elsif token[:type] == TOKENS::EXCLUDES_OPERATOR
+      elsif token[:type] == TOKENS::MUST_EXCLUDE_OPERATOR
         if !token[:value]
-          excludes_opened = true
-          excludes_node = Nodes::Excludes.new
-          context << excludes_node
-          context = excludes_node
+          must_exclude_opened = true
+          must_exclude_node = Nodes::MustExclude.new
+          context << must_exclude_node
+          context = must_exclude_node
         else
-          excludes_node = Nodes::Excludes.new([token[:value]], context)
-          context << excludes_node
+          must_exclude_node = Nodes::MustExclude.new([token[:value]], context)
+          context << must_exclude_node
         end
 
       elsif token[:type] == TOKENS::MUST_INCLUDE_OPERATOR
@@ -223,7 +223,7 @@ class QueryParser
     query = Query.new
     nodes = tree.children
     query.exact_matches = nodes.select { |node| node.is_a?(Nodes::String) }.map(&:value)
-    query.excludes = nodes.select { |node| node.is_a?(Nodes::Excludes) }.map(&:value)
+    query.must_exclude = nodes.select { |node| node.is_a?(Nodes::MustExclude) }.map(&:value)
     query.must_include = nodes.select { |node| node.is_a?(Nodes::MustInclude) }.map(&:value)
     query.should_include = nodes.select { |node| node.is_a?(Nodes::Text) }.map(&:value)
 

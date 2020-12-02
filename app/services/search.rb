@@ -3,7 +3,7 @@
 # Provides ability to search across languages.
 # Search#perform does the following:
 # 1. If query is empty returns all languages
-# 2. Filters languages if one more of the following options provided: must_include, exact_matches, excludes.
+# 2. Filters languages if one more of the following options provided: must_include, exact_matches, must_exclude.
 # 3. If should_include is empty returns filtered languages
 # 4. Else calculates relevance points for language based on how many matches found.
 #   It looks in all 3 fields: name, tags, authors.
@@ -37,8 +37,8 @@ class Search
       languages = must_include_filter(languages, query.exact_matches)
     end
 
-    if query.excludes.any?
-      languages = excludes_filter(languages, query.excludes)
+    if query.must_exclude.any?
+      languages = excludes_filter(languages, query.must_exclude)
     end
 
     if query.should_include.any?

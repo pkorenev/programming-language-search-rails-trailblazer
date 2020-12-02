@@ -54,8 +54,8 @@ describe Search do
       expect(language_names).to eq(['ActionScript'])
     end
 
-    it 'query with excludes' do
-      query = Query.new(excludes: ['array', 'Curly-bracket'])
+    it 'query with must_exclude' do
+      query = Query.new(must_exclude: ['array', 'Curly-bracket'])
       language_names = Search.new(query, @languages).perform.map(&:name)
       expect(language_names).to eq(['bash', 'BASIC'])
     end
@@ -73,7 +73,7 @@ describe Search do
     end
 
     it 'complex query' do
-      query = Query.new(must_include: ['curly-bracket'], excludes: ['gary'], should_include: ['scripting'])
+      query = Query.new(must_include: ['curly-bracket'], must_exclude: ['gary'], should_include: ['scripting'])
       language_names = Search.new(query, @languages).perform.map(&:name)
       expect(language_names).to eq(['AWK'])
     end

@@ -23,13 +23,13 @@ describe QueryParser do
     it 'query with word and excluded words' do
       query = QueryParser.new(' procedural --reflective --metaprogramming').parse
       expect(query.should_include).to eq(['procedural'])
-      expect(query.excludes).to eq(['reflective', 'metaprogramming'])
+      expect(query.must_exclude).to eq(['reflective', 'metaprogramming'])
     end
 
     it 'query with word and excluded quoted strings' do
       query = QueryParser.new(' procedural --"metaprogramming" --"Object-oriented class-based"').parse
       expect(query.should_include).to eq(['procedural'])
-      expect(query.excludes).to eq(['metaprogramming', 'Object-oriented class-based'])
+      expect(query.must_exclude).to eq(['metaprogramming', 'Object-oriented class-based'])
     end
 
     it 'query with must-include words and quoted strings' do
@@ -43,7 +43,7 @@ describe QueryParser do
 
       expect(query.should_include).to eq(['object', 'abc', 'reflective'])
       expect(query.exact_matches).to eq(['interpreted procedural'])
-      expect(query.excludes).to eq(['array', 'interactive mode'])
+      expect(query.must_exclude).to eq(['array', 'interactive mode'])
       expect(query.must_include).to eq(['metaprogramming', 'Command line'])
     end
   end
