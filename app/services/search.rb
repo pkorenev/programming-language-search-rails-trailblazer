@@ -10,6 +10,8 @@
 #   Rejects languages with 0 points from search result.
 
 # TODO: Think how logic should work.
+# TODO: Maybe we need to apply filtering in calculate_points_for_language method to avoid multiple loops.
+#   But it depends on our requirements.
 
 class Search
   attr_reader :query, :languages
@@ -29,11 +31,11 @@ class Search
     end
 
     if query.must_include.any?
-      languages = must_include_filter(languages, query.must_include)
+      languages = apply_must_include_filter(languages, query.must_include)
     end
 
     if query.must_exclude.any?
-      languages = excludes_filter(languages, query.must_exclude)
+      languages = apply_must_exclude_filter(languages, query.must_exclude)
     end
 
     if query.should_include.any?
@@ -53,7 +55,7 @@ class Search
     data_array_of_strings.any? { |data_string| matches_string?(data_string, input_string) }
   end
 
-  def must_include_filter(languages, must_include_strings)
+  def apply_must_include_filter(languages, must_include_strings)
     languages.select do |language|
       must_include_strings.all? do |input_string|
         matches_string?(language.name, input_string) ||
@@ -63,7 +65,7 @@ class Search
     end
   end
 
-  def excludes_filter(languages, excludes_strings)
+  def apply_must_exclude_filter(languages, excludes_strings)
     languages.select do |language|
       excludes_strings.none? do |input_string|
         matches_string?(language.name, input_string) ||
