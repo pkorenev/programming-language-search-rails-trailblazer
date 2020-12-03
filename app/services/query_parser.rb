@@ -14,7 +14,7 @@
 class QueryParser
   module SYMBOLS
     QUOTE = '"'
-    MUST_EXCLUDE_OPERATOR = '--'
+    MUST_EXCLUDE_OPERATOR = '-'
     MUST_INCLUDE_OPERATOR = '+'
   end
 
