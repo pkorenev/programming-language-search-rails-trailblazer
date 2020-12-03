@@ -1,9 +1,10 @@
 ## Prerequisites
 * Ruby 2.5.8
+* NodeJS
 
 ## Usage
 
-* Install deps: `gem install bundler && bundle install`.
+* Install deps: `gem install bundler && bundle install && yarn install`.
 * To run tests: `$ rspec`.
 * To run console: `$ bin/rails c`
 
