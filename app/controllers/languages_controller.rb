@@ -1,22 +1,16 @@
 class LanguagesController < ApplicationController
-  before_action :load_languages
+  #res = Language::Operations::Search.({query: 'lisp', languages: languages})
 
   def index
-
+    run Language::Operations::Search, params: params do |result|
+      @languages = result[:languages]
+    end
   end
 
   def search
-    if params[:query].present?
-      query = QueryParser.new(params[:query]).parse
-      @languages = Search.new(query, @languages).perform
+    run Language::Operations::Search, params: params do |result|
+      @languages = result[:languages]
+      render :index
     end
-
-    render :index
-  end
-
-  private
-
-  def load_languages
-    @languages = LanguagesLoader.load_languages
   end
 end
