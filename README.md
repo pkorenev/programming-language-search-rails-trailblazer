@@ -4,9 +4,10 @@
 
 ## Usage
 
-* Install deps: `gem install bundler && bundle install && yarn install`.
+* Install deps: `$ gem install bundler && bundle install && yarn install`.
 * To run tests: `$ rspec`.
 * To run console: `$ bin/rails c`
+* To run local server: `$ bin/rails s` and open `localhost:3000` in your browser.
 
 ## Short intro
 I thinked about to write more performant search with caching and maybe multithreading. But then I decided not to do it. Because this is just test task. And in real project we'd use some database instead of reimplementing it.
